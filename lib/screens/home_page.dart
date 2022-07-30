@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment_todo/screens/add_task_screen.dart';
 import 'package:flutter_assignment_todo/utils/colors.dart';
 import 'package:flutter_assignment_todo/utils/text_styles.dart';
 
@@ -22,11 +23,10 @@ class _HomePageState extends State<HomePage> {
           children: [
             Container(
               padding: const EdgeInsets.all(10.0),
-              // color: Colors.red.withOpacity(0.1),
               height: MediaQuery.of(context).size.height * 0.3,
               width: double.infinity,
               child: Align(
-                alignment: Alignment.bottomLeft,
+                alignment: Alignment.centerLeft,
                 child: Text(
                   'TODO',
                   style: AppTypography.kGilroyBoldGeneric(
@@ -34,19 +34,17 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 10.0,
-            ),
-            Container(
-              color: Colors.yellow.withOpacity(0.1),
+            SizedBox(
               height: MediaQuery.of(context).size.height * 0.6,
               width: double.infinity,
-              child: PageViewWidget(),
+              child: const PageViewWidget(),
             ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed(AddTaskScreen.routeName);
+          },
           backgroundColor: APPColors.kcOrange,
           child: const Icon(
             Icons.add,

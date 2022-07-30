@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment_todo/screens/add_task_screen.dart';
+import 'package:flutter_assignment_todo/screens/task_list_screen.dart';
+import 'package:flutter_assignment_todo/utils/theme.dart';
 
 import 'screens/home_page.dart';
 
@@ -14,11 +17,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: CustomTheme.lightTheme,
       home: const HomePage(),
+      routes: {
+        AddTaskScreen.routeName: (ctx) => const AddTaskScreen(),
+        TaskListScreen.routeName: (ctx) => const TaskListScreen(),
+      },
     );
   }
 }
-

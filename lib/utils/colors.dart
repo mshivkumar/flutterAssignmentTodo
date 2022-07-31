@@ -12,21 +12,6 @@ class APPColors {
   static const Color kcGrey = Color(0xffE5E5E5);
   static const Color kcDarkGrey = Color(0xff7E7E7E);
   static const Color kcTransparent = Colors.transparent;
-  static const LinearGradient kcOrangeGradient = LinearGradient(colors: [
-    Color(0xffF7707D),
-    Color(0xffF29173),
-  ]);
-  static const LinearGradient kcSplashGradient = LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [
-        Color(0xffFFB68D),
-        Color(0xffF29173),
-        Color(0xffF7707D),
-      ]);
   static const Color kcGraphPrimary = Color(0xffFF6D6D); //Color(0xff748ADF);
   static const Color kcGraphSecondary = Color(0xff748ADF); //Color(0xff38D68B);
-  static const Color kcGraphTertiary = Color(0xff38D68B);
-  static const Color kcDeepBlack = Color(0xff000000);
-  static const Color checkInColor = Color(0xffFF4141);
 }

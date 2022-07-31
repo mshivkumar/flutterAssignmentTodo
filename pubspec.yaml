@@ -38,6 +38,7 @@ dependencies:
   sqflite:
   provider:
   path_provider:
+  device_preview:
 
 dev_dependencies:
   flutter_test:

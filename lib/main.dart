@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment_todo/screens/add_task_screen.dart';
 import 'package:flutter_assignment_todo/screens/task_list_screen.dart';
@@ -9,7 +11,12 @@ import 'screens/home_page.dart';
 import 'screens/search_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    DevicePreview(
+        enabled: !kReleaseMode,
+        builder: (context) => MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

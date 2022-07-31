@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment_todo/screens/task_list_screen.dart';
-import 'package:flutter_assignment_todo/utils/colors.dart';
-import 'package:flutter_assignment_todo/utils/constants.dart';
-import 'package:flutter_assignment_todo/utils/text_styles.dart';
 
-class PageViewWidget extends StatefulWidget {
-  const PageViewWidget({Key? key}) : super(key: key);
+import '../screens/task_list_screen.dart';
+import '../utils/colors.dart';
+import '../utils/constants.dart';
+import '../utils/text_styles.dart';
+
+class ListScrollWidget extends StatefulWidget {
+  const ListScrollWidget({Key? key}) : super(key: key);
 
   @override
-  State<PageViewWidget> createState() => _PageViewWidgetState();
+  State<ListScrollWidget> createState() => _ListScrollWidgetState();
 }
 
-class _PageViewWidgetState extends State<PageViewWidget> {
-  late PageController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = PageController(initialPage: 0, viewportFraction: 0.8);
-  }
-
+class _ListScrollWidgetState extends State<ListScrollWidget> {
   void navigate({required NavigateToPage navigateTo}) {
     switch (navigateTo) {
       case NavigateToPage.today:
@@ -53,7 +46,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
         child: Container(
           color: APPColors.kcBlue.withOpacity(0.1),
           height: 200,
-          width: 400,
+          width: 300,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -89,9 +82,8 @@ class _PageViewWidgetState extends State<PageViewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      allowImplicitScrolling: true,
-      controller: _controller,
+    return ListView(
+      scrollDirection: Axis.horizontal,
       children: [
         pageWidget(
           title: "Today's tasks",
@@ -107,11 +99,5 @@ class _PageViewWidgetState extends State<PageViewWidget> {
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }

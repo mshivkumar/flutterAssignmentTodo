@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assignment_todo/screens/add_task_screen.dart';
 import 'package:flutter_assignment_todo/utils/colors.dart';
 import 'package:flutter_assignment_todo/utils/text_styles.dart';
+import '../widgets/list_scroll_widget.dart';
 import '../widgets/page_view_widget.dart';
 import 'search_screen.dart';
 
@@ -18,10 +19,11 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: APPColors.kcWhite,
-        body: Container(
+        body: SizedBox(
           height: MediaQuery.of(context).size.height * 1.0,
           child: Column(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -79,7 +81,8 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.6,
                 width: double.infinity,
-                child: const PageViewWidget(),
+                // child:  const PageViewWidget(),
+                child: const ListScrollWidget(),
               ),
             ],
           ),

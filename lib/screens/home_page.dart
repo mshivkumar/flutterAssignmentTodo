@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assignment_todo/screens/add_task_screen.dart';
 import 'package:flutter_assignment_todo/utils/colors.dart';
 import 'package:flutter_assignment_todo/utils/text_styles.dart';
-
 import '../widgets/page_view_widget.dart';
 
 class HomePage extends StatefulWidget {

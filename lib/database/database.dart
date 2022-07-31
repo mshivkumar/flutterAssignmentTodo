@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/task.dart';
+import '../utils/constants.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._instance();
@@ -43,7 +44,7 @@ class DatabaseHelper {
     return result;
   }
 
-  Future<List<Task>> getTaskList() async {
+  Future<List<Task>> getAllTaskList() async {
     final List<Map<String, dynamic>> taskMapList = await getTaskMapList();
 
     final List<Task> taskList = [];
@@ -54,6 +55,37 @@ class DatabaseHelper {
     taskList.sort((noteA, noteB) => noteA.date!.compareTo(noteB.date!));
 
     return taskList;
+  }
+
+  Future<List<Task>> getFilteredTaskList({required TaskList loadList}) async {
+    DateTime today =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    final List<Map<String, dynamic>> taskMapList = await getTaskMapList();
+
+    List<Task> _taskList = [];
+
+    for (var taskMap in taskMapList) {
+      _taskList.add(Task.fromMap(taskMap));
+    }
+    _taskList.sort((noteA, noteB) => noteB.date!.compareTo(noteA.date!));
+    if (loadList.toString() == TaskList.today.toString()) {
+      List<Task> taskList = _taskList;
+      _taskList =
+          taskList.where((task) => task.date!.isAtSameMomentAs(today)).toList();
+    } else if (loadList.toString() == TaskList.tomorrow.toString()) {
+      List<Task> taskList = _taskList;
+      _taskList = taskList
+          .where((task) => (task.date!.isAfter(today) &&
+              task.date!.isBefore(today.add(const Duration(days: 2)))))
+          .toList();
+    } else {
+      List<Task> taskList = _taskList;
+      _taskList = taskList
+          .where(
+              (task) => task.date!.isAfter(today.add(const Duration(days: 2))))
+          .toList();
+    }
+    return _taskList;
   }
 
   Future<int> insertTask(Task task) async {

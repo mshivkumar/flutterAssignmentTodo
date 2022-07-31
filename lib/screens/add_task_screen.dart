@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment_todo/utils/colors.dart';
+import 'package:flutter_assignment_todo/view_models/create_task_view_model.dart';
+import 'package:flutter_assignment_todo/view_models/task_list_view_model.dart';
+import 'package:flutter_assignment_todo/view_models/task_view_model.dart';
+import 'package:flutter_assignment_todo/view_models/update_task_view_model.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../database/database.dart';
 import '../models/task.dart';
@@ -21,6 +26,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   late TextEditingController _titleController;
   late TextEditingController _descController;
   late TextEditingController _dateController;
+  late TaskListViewModel _taskListVM;
   Task? _task;
   String _title = '';
   String _description = '';
@@ -32,6 +38,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   void initState() {
     super.initState();
+    _taskListVM = Provider.of<TaskListViewModel>(context, listen: false);
     _titleController = TextEditingController();
     _descController = TextEditingController();
     _dateController = TextEditingController(text: _dateFormatter.format(_date));
@@ -40,25 +47,48 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    readArguments();
-  }
+    readArguments().then((taskVM) {
+      late String title;
+      late String description;
+      late DateTime date;
+      late String priority;
 
-  Future<void> readArguments() async {
-    Task? task;
-    try {
-      final routeArgs = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-      task = routeArgs['task'] as Task?;
-    } catch(e) {
-      debugPrint('Error: $e');
-    }
-
-    setState(() {
-      _task = task;
-      _isLoading = false;
+      if (taskVM?.task != null) {
+        title = taskVM!.title!;
+        description = taskVM!.description!;
+        date = taskVM!.date!;
+        priority = taskVM!.priority!;
+        setState(() {
+          _task = taskVM?.task;
+          _title = title;
+          _titleController.text = title;
+          _description = description;
+          _descController.text = description;
+          _date = date;
+          _dateController.text = _dateFormatter.format(date);
+          _priority = priority;
+          _isLoading = false;
+        });
+      }
+      setState(() {
+        _task = taskVM?.task;
+        _isLoading = false;
+      });
     });
   }
 
-  /* TODO goes in VIEWMODEL */
+  Future<TaskViewModel?> readArguments() async {
+    TaskViewModel? taskVM;
+    try {
+      final routeArgs =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+      taskVM = routeArgs['task'] as TaskViewModel?;
+    } catch (e) {
+      debugPrint('Error: $e');
+    }
+    return taskVM;
+  }
+
   _handleDatePicker() async {
     DateTime startDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -77,20 +107,38 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     }
   }
 
-  /* TODO Goes in VIEWMODEL */
-  _submit() {
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      print('$_title, $_date, $_priority');
-
-      Task task = Task(title: _title, description: _description, date: _date, priority: _priority);
 
       if (_task == null) {
-        task.status = 0;
-        DatabaseHelper.instance.insertTask(task);
+        Task t = Task(
+          title: _title,
+          description: _description,
+          date: _date,
+          priority: _priority,
+          status: 0,
+        );
+        await _taskListVM.createTask(task: t);
+        Navigator.of(context).pop();
+      } else {
+        Task t = Task(
+          id: _task?.id,
+          title: _title,
+          description: _description,
+          date: _date,
+          priority: _priority,
+          status: _task?.status,
+        );
+        await _taskListVM.updateTask(task: t);
         Navigator.of(context).pop();
       }
     }
+  }
+
+  _delete() {
+    DatabaseHelper.instance.deleteTask(_task!.id!);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -239,6 +287,32 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               ),
                             ),
                           ),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+                          _task != null
+                              ? GestureDetector(
+                                  onTap: _delete,
+                                  child: Container(
+                                    height: 50.0,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: APPColors.kcGraphPrimary
+                                          .withOpacity(0.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'Delete Task',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink()
                         ],
                       ),
                     )

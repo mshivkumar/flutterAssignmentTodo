@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assignment_todo/utils/colors.dart';
 import 'package:flutter_assignment_todo/utils/constants.dart';
 import 'package:flutter_assignment_todo/utils/text_styles.dart';
+import 'package:flutter_assignment_todo/view_models/task_list_view_model.dart';
 import 'package:flutter_assignment_todo/widgets/completed_task_list_widget.dart';
 import 'package:flutter_assignment_todo/widgets/todo_task_list_widget.dart';
+import 'package:provider/provider.dart';
 
-import '../database/database.dart';
 import '../models/task.dart';
 
 class TaskListScreen extends StatefulWidget {
@@ -19,7 +20,6 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   late TaskList? _loadTaskListFor;
-  late List<Task>? _taskList;
   bool _isLoading = true;
 
   @override
@@ -35,7 +35,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   Future<void> _readArguments() async {
     TaskList? loadTaskListFor;
-    List<Task>? taskList;
     try {
       final routeArgs =
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
@@ -43,13 +42,19 @@ class _TaskListScreenState extends State<TaskListScreen> {
     } catch (e) {
       debugPrint('Error: $e');
     }
-    taskList = await DatabaseHelper.instance.getTaskList();
+
+    Provider.of<TaskListViewModel>(context, listen: false)
+        .getFilteredTasks(taskList: loadTaskListFor!);
 
     setState(() {
       _loadTaskListFor = loadTaskListFor;
-      _taskList = taskList;
       _isLoading = false;
     });
+  }
+
+  void refreshRecords() {
+    Provider.of<TaskListViewModel>(context, listen: false)
+        .getFilteredTasks(taskList: _loadTaskListFor!);
   }
 
   Widget tabHeader({required TaskList? taskListOf}) {

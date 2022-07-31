@@ -54,12 +54,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       late String priority;
 
       if (taskVM?.task != null) {
-        title = taskVM!.title!;
-        description = taskVM!.description!;
-        date = taskVM!.date!;
-        priority = taskVM!.priority!;
+        title = taskVM!.title;
+        description = taskVM.description;
+        date = taskVM.date;
+        priority = taskVM.priority;
         setState(() {
-          _task = taskVM?.task;
+          _task = taskVM.task;
           _title = title;
           _titleController.text = title;
           _description = description;
@@ -120,6 +120,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           status: 0,
         );
         await _taskListVM.createTask(task: t);
+        await _taskListVM.getFilteredTasks(
+            taskList: _taskListVM.loadTaskListFor);
         Navigator.of(context).pop();
       } else {
         Task t = Task(
@@ -131,13 +133,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           status: _task?.status,
         );
         await _taskListVM.updateTask(task: t);
+        await _taskListVM.getFilteredTasks(
+            taskList: _taskListVM.loadTaskListFor);
         Navigator.of(context).pop();
       }
     }
   }
 
-  _delete() {
-    DatabaseHelper.instance.deleteTask(_task!.id!);
+  void _delete() async {
+    await _taskListVM.deleteTask(id: _task!.id!);
+    await _taskListVM.getFilteredTasks(taskList: _taskListVM.loadTaskListFor);
     Navigator.of(context).pop();
   }
 

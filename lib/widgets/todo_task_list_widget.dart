@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment_todo/utils/constants.dart';
 import 'package:flutter_assignment_todo/view_models/task_list_view_model.dart';
 import 'package:flutter_assignment_todo/view_models/task_view_model.dart';
 import 'package:flutter_assignment_todo/widgets/empty_list_widget.dart';

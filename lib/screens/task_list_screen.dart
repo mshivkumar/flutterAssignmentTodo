@@ -7,8 +7,6 @@ import 'package:flutter_assignment_todo/widgets/completed_task_list_widget.dart'
 import 'package:flutter_assignment_todo/widgets/todo_task_list_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../models/task.dart';
-
 class TaskListScreen extends StatefulWidget {
   static const routeName = '/task-list-screen';
 
@@ -43,18 +41,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
       debugPrint('Error: $e');
     }
 
-    Provider.of<TaskListViewModel>(context, listen: false)
-        .getFilteredTasks(taskList: loadTaskListFor!);
-
+    Provider.of<TaskListViewModel>(context, listen: false).getFilteredTasks(taskList: loadTaskListFor!);
+    Provider.of<TaskListViewModel>(context, listen: false).setTaskListFor(taskListFor: loadTaskListFor);
     setState(() {
       _loadTaskListFor = loadTaskListFor;
       _isLoading = false;
     });
-  }
-
-  void refreshRecords() {
-    Provider.of<TaskListViewModel>(context, listen: false)
-        .getFilteredTasks(taskList: _loadTaskListFor!);
   }
 
   Widget tabHeader({required TaskList? taskListOf}) {
@@ -113,7 +105,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
   @override
   Widget build(BuildContext context) {
     return (_isLoading)
-        ? const CircularProgressIndicator()
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
         : DefaultTabController(
             length: 2,
             child: Scaffold(

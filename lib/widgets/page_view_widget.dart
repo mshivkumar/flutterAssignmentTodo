@@ -26,21 +26,21 @@ class _PageViewWidgetState extends State<PageViewWidget> {
       case NavigateToPage.today:
         {
           Navigator.of(context).pushNamed(TaskListScreen.routeName,
-              arguments: {'taskList': TaskList.today});
+              arguments: {'loadTaskListFor': TaskList.today});
         }
         break;
 
       case NavigateToPage.tomorrow:
         {
           Navigator.of(context).pushNamed(TaskListScreen.routeName,
-              arguments: {'taskList': TaskList.tomorrow});
+              arguments: {'loadTaskListFor': TaskList.tomorrow});
         }
         break;
 
       default:
         {
           Navigator.of(context).pushNamed(TaskListScreen.routeName,
-              arguments: {'taskList': TaskList.upcoming});
+              arguments: {'loadTaskListFor': TaskList.upcoming});
         }
         break;
     }

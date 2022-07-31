@@ -31,6 +31,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   String _description = '';
   String _priority = 'Low';
   bool _isLoading = true;
+  String _btnText = "Save";
+  String _titleText = "Add";
   DateTime _date =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
@@ -66,13 +68,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           _date = date;
           _dateController.text = _dateFormatter.format(date);
           _priority = priority;
+          _btnText = "Update";
+          _titleText = "Edit";
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _task = taskVM?.task;
+          _btnText = "Save";
+          _titleText = "Add";
           _isLoading = false;
         });
       }
-      setState(() {
-        _task = taskVM?.task;
-        _isLoading = false;
-      });
+
     });
   }
 
@@ -144,6 +152,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Future<void> _delete() async {
     await _taskListVM.deleteTask(id: _task!.id!);
     await _taskListVM.getFilteredTasks(taskList: _taskListVM.loadTaskListFor);
+    await _taskListVM.getAllTasks();
   }
 
   @override
@@ -158,7 +167,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               backgroundColor: APPColors.kcWhite,
               foregroundColor: APPColors.kcBlack,
               elevation: 0.0,
-              title: const Text('Add'),
+              title: Text(_titleText),
             ),
             body: SingleChildScrollView(
               child: Padding(
@@ -281,10 +290,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 color: APPColors.kcGraphSecondary,
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: Text(
-                                  'Save',
-                                  style: TextStyle(
+                                  _btnText,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20.0,
                                   ),
@@ -347,8 +356,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                                       TextButton(
                                                         onPressed: () async {
                                                           await _delete();
-                                                          Navigator.of(context).pop();
-                                                          Navigator.of(context).pop();
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          Navigator.of(context)
+                                                              .pop();
                                                         },
                                                         child: Text(
                                                           'yes',

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment_todo/utils/colors.dart';
-import 'package:flutter_assignment_todo/view_models/create_task_view_model.dart';
 import 'package:flutter_assignment_todo/view_models/task_list_view_model.dart';
 import 'package:flutter_assignment_todo/view_models/task_view_model.dart';
-import 'package:flutter_assignment_todo/view_models/update_task_view_model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../database/database.dart';
 import '../models/task.dart';
+import '../utils/text_styles.dart';
 
 class AddTaskScreen extends StatefulWidget {
   static const routeName = '/add-task-screen';
@@ -122,6 +121,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         await _taskListVM.createTask(task: t);
         await _taskListVM.getFilteredTasks(
             taskList: _taskListVM.loadTaskListFor);
+        await _taskListVM.getAllTasks();
         Navigator.of(context).pop();
       } else {
         Task t = Task(
@@ -135,15 +135,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         await _taskListVM.updateTask(task: t);
         await _taskListVM.getFilteredTasks(
             taskList: _taskListVM.loadTaskListFor);
+        await _taskListVM.getAllTasks();
         Navigator.of(context).pop();
       }
     }
   }
 
-  void _delete() async {
+  Future<void> _delete() async {
     await _taskListVM.deleteTask(id: _task!.id!);
     await _taskListVM.getFilteredTasks(taskList: _taskListVM.loadTaskListFor);
-    Navigator.of(context).pop();
   }
 
   @override
@@ -297,7 +297,79 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           ),
                           _task != null
                               ? GestureDetector(
-                                  onTap: _delete,
+                                  onTap: () async {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                          //this right here
+                                          child: SizedBox(
+                                            // color: Colors.green,
+                                            height: 120,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 15.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    'Are you sure you want to delete the Task?',
+                                                    style: AppTypography
+                                                        .kNunitoBold14(),
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text(
+                                                          'cancel',
+                                                          style: AppTypography
+                                                              .kNunitoBold14(
+                                                                  color: APPColors
+                                                                      .kcGraphPrimary
+                                                                      .withOpacity(
+                                                                          0.7)),
+                                                        ),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          await _delete();
+                                                          Navigator.of(context).pop();
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                        child: Text(
+                                                          'yes',
+                                                          style: AppTypography
+                                                              .kNunitoBold14(
+                                                                  color: APPColors
+                                                                      .kcGraphPrimary
+                                                                      .withOpacity(
+                                                                          0.7)),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
                                   child: Container(
                                     height: 50.0,
                                     width: double.infinity,

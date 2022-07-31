@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assignment_todo/screens/add_task_screen.dart';
 import 'package:flutter_assignment_todo/screens/task_list_screen.dart';
 import 'package:flutter_assignment_todo/utils/theme.dart';
-import 'package:flutter_assignment_todo/view_models/create_task_view_model.dart';
 import 'package:flutter_assignment_todo/view_models/task_list_view_model.dart';
-import 'package:flutter_assignment_todo/view_models/update_task_view_model.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/home_page.dart';
+import 'screens/search_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,20 +23,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => TaskListViewModel(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => CreateTaskViewModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => UpdateTaskViewModel(),
-        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
         theme: CustomTheme.lightTheme,
         home: const HomePage(),
         routes: {
           AddTaskScreen.routeName: (ctx) => const AddTaskScreen(),
           TaskListScreen.routeName: (ctx) => const TaskListScreen(),
+          SearchScreen.routeName: (ctx) => const SearchScreen(),
         },
       ),
     );

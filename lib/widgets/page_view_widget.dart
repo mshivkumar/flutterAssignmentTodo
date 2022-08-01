@@ -74,7 +74,7 @@ class _PageViewWidgetState extends State<PageViewWidget> {
                   Icons.task_rounded,
                   size: 200,
                   color: APPColors.kcGraphSecondary,
-                )
+                ),
                 // Image.asset(
                 //   "assets/images/todo.png",
                 //   fit: BoxFit.contain,
